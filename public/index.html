@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LazyMailBOSS - Dashboard</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>LazyMailBOSS</h1>
+            <p class="subtitle">Automated Email Response System</p>
+        </header>
+
+        <!-- Status Section -->
+        <section class="card" id="status-section">
+            <h2>System Status</h2>
+            <div class="status-grid">
+                <div class="status-item">
+                    <span class="status-label">Monitoring:</span>
+                    <span class="status-value" id="monitoring-status">Loading...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Mode:</span>
+                    <span class="status-value" id="confirmation-mode">Loading...</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Pending Replies:</span>
+                    <span class="status-value" id="pending-count">0</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-label">Total Sent:</span>
+                    <span class="status-value" id="sent-count">0</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Configuration Section -->
+        <section class="card" id="config-section">
+            <h2>Configuration</h2>
+            <form id="config-form">
+                <div class="form-section">
+                    <h3>Email Settings</h3>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="imap-host">IMAP Host:</label>
+                            <input type="text" id="imap-host" name="imapHost" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="imap-port">IMAP Port:</label>
+                            <input type="number" id="imap-port" name="imapPort" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="smtp-host">SMTP Host:</label>
+                            <input type="text" id="smtp-host" name="smtpHost" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="smtp-port">SMTP Port:</label>
+                            <input type="number" id="smtp-port" name="smtpPort" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="username">Username:</label>
+                            <input type="text" id="username" name="username" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="password">Password:</label>
+                            <input type="password" id="password" name="password" placeholder="Leave blank to keep current">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Filter Settings</h3>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="keywords-enabled" name="keywordsEnabled">
+                            Enable Keyword Filtering
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="keywords">Keywords (comma-separated):</label>
+                        <input type="text" id="keywords" name="keywords" placeholder="urgent, important, help">
+                    </div>
+                    <div class="form-group">
+                        <label for="excluded-domains">Excluded Domains (comma-separated):</label>
+                        <input type="text" id="excluded-domains" name="excludedDomains" placeholder="spam.com, noreply.com">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>Auto-Reply Settings</h3>
+                    <div class="form-group checkbox-group">
+                        <label>
+                            <input type="checkbox" id="manual-confirmation" name="manualConfirmation">
+                            Require Manual Confirmation
+                        </label>
+                    </div>
+                    <div class="form-group">
+                        <label for="reply-template">Reply Template:</label>
+                        <textarea id="reply-template" name="replyTemplate" rows="4" required></textarea>
+                    </div>
+                    <div class="form-group">
+                        <label for="check-interval">Check Interval (seconds):</label>
+                        <input type="number" id="check-interval" name="checkInterval" min="1" required>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary">Save Configuration</button>
+                    <button type="button" class="btn btn-secondary" id="reload-config">Reload</button>
+                </div>
+            </form>
+            <div id="config-message" class="message"></div>
+        </section>
+
+        <!-- Pending Replies Section -->
+        <section class="card" id="pending-replies-section">
+            <h2>Pending Replies</h2>
+            <div id="pending-replies-list">
+                <p class="empty-state">No pending replies</p>
+            </div>
+        </section>
+
+        <!-- Activity Log Section -->
+        <section class="card" id="activity-log-section">
+            <h2>Activity Log</h2>
+            <div class="log-controls">
+                <button class="btn btn-secondary" id="refresh-logs">Refresh</button>
+                <div class="pagination-controls">
+                    <button class="btn btn-small" id="prev-page" disabled>Previous</button>
+                    <span id="page-info">Page 1</span>
+                    <button class="btn btn-small" id="next-page">Next</button>
+                </div>
+            </div>
+            <div id="activity-log-list">
+                <p class="empty-state">Loading logs...</p>
+            </div>
+        </section>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
