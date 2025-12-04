@@ -1,0 +1,59 @@
+version: '3.8'
+
+services:
+  lazymail:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: lazymail-boss
+    ports:
+      - "${PORT:-3000}:3000"
+    environment:
+      # Server Configuration
+      - PORT=3000
+      - NODE_ENV=${NODE_ENV:-production}
+      
+      # Security Configuration
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-change-this-to-a-secure-random-key}
+      
+      # Database Configuration
+      - DATABASE_PATH=/app/data/lazymail.db
+      - CONFIG_DATABASE_PATH=/app/data/config.db
+      
+      # Email Configuration (Optional - can be set via dashboard)
+      - IMAP_HOST=${IMAP_HOST:-}
+      - IMAP_PORT=${IMAP_PORT:-993}
+      - IMAP_USER=${IMAP_USER:-}
+      - IMAP_PASSWORD=${IMAP_PASSWORD:-}
+      - SMTP_HOST=${SMTP_HOST:-}
+      - SMTP_PORT=${SMTP_PORT:-587}
+      
+      # Auto-Reply Configuration
+      - CHECK_INTERVAL=${CHECK_INTERVAL:-10}
+      - MANUAL_CONFIRMATION=${MANUAL_CONFIRMATION:-true}
+      - REPLY_TEMPLATE=${REPLY_TEMPLATE:-Thank you for your email. I will respond shortly.}
+      
+      # Filter Configuration
+      - KEYWORDS_ENABLED=${KEYWORDS_ENABLED:-false}
+      - KEYWORDS=${KEYWORDS:-}
+      - EXCLUDED_DOMAINS=${EXCLUDED_DOMAINS:-}
+      
+      # Logging Configuration
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    
+    volumes:
+      # Persist database files
+      - lazymail-data:/app/data
+    
+    restart: unless-stopped
+    
+    healthcheck:
+      test: ["CMD", "node", "-e", "require('http').get('http://localhost:3000/api/health', (r) => {process.exit(r.statusCode === 200 ? 0 : 1)})"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  lazymail-data:
+    driver: local

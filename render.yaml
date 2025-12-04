@@ -1,0 +1,18 @@
+services:
+  - type: web
+    name: lazymail-boss
+    env: docker
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3000
+      - key: ENCRYPTION_KEY
+        generateValue: true
+        sync: false
+    disk:
+      name: lazymail-data
+      mountPath: /app/data
+      sizeGB: 1
